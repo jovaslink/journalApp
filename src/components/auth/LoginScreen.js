@@ -13,8 +13,8 @@ export const LoginScreen = () => {
   const { loading } = state.ui;
   //hook personalizado que maneja el formulario, enviamos nombres de los campos e inicializacion
   const [handlerInputForm, stateValues] = useForm({
-    email: "jovaslink@hotmail.com",
-    password: "123456",
+    email: "",
+    password: "",
   });
   //destructuracion del objeto statevalues, viene del hook useForm
   const { email, password } = stateValues;
