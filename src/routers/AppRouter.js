@@ -5,7 +5,7 @@ import { BrowserRouter as Router, Switch, Redirect } from "react-router-dom";
 
 import { PublicRoute } from "./PublicRoute";
 import { PrivateRoute } from "./PrivateRoute";
-import { LoginRouter } from "./LoginRouter";
+import { AuthRouter } from "./AuthRouter";
 import { JournalScreen } from "../components/dashboard/JournalScreen";
 import { login } from "../actions/auth";
 import { loadNotesStart } from "../actions/notes";
@@ -23,37 +23,36 @@ export default function AppRouter() {
         dispatch(login(user.uid, user.displayName));
         setIsLoggedIn(true);
         dispatch(loadNotesStart(user.uid));
-        setCheking(false);
       } else {
         setIsLoggedIn(false);
-        setCheking(false);
       }
+      setCheking(false);
     });
   }, [dispatch, setCheking, setIsLoggedIn]);
 
   if (checking) {
     return <h1>Espere...</h1>;
-  } else {
-    return (
-      <Router>
-        <div>
-          <Switch>
-            <PublicRoute
-              path="/auth"
-              isLoggedIn={isLoggedIn}
-              component={LoginRouter}
-            />
-
-            <PrivateRoute
-              exact
-              path="/"
-              isLoggedIn={isLoggedIn}
-              component={JournalScreen}
-            />
-            <Redirect to="auth/login" />
-          </Switch>
-        </div>
-      </Router>
-    );
   }
+  return (
+    <Router>
+      <div>
+        <Switch>
+          <PublicRoute
+            path="/auth"
+            component={AuthRouter}
+            isAuthenticated={isLoggedIn}
+          />
+
+          <PrivateRoute
+            exact
+            isAuthenticated={isLoggedIn}
+            path="/"
+            component={JournalScreen}
+          />
+
+          <Redirect to="/auth/login" />
+        </Switch>
+      </div>
+    </Router>
+  );
 }
