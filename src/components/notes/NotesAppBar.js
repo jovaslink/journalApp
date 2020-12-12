@@ -7,10 +7,12 @@ import { updateNote, fileUpload, startDelete } from "../../actions/notes";
 export const NotesAppBar = () => {
   const dispatch = useDispatch();
   const { date, id } = useSelector((state) => state.notes.active);
+  const { active } = useSelector((state) => state.notes);
+
   const dateNow = moment(date);
 
   const handleSave = () => {
-    dispatch(updateNote());
+    dispatch(updateNote(active));
   };
   const handleFile = (e) => {
     const file = e.target.files[0];

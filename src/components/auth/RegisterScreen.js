@@ -14,10 +14,10 @@ export const RegisterScreen = () => {
 
   const { loading } = state.ui;
   const [handlerInputForm, stateValues] = useForm({
-    name: "jovaslink",
-    email: "jovaslink@hotmail.com",
-    password: "123456",
-    password2: "123456",
+    name: "",
+    email: "",
+    password: "",
+    password2: "",
   });
 
   //const [stateErrorForm, setErrorForm] = useState(true); //hook para manejar el error visualizando el div

@@ -40,19 +40,18 @@ export const loadNotesStart = (uid) => {
   };
 };
 
-export const updateNote = () => {
+export const updateNote = (note) => {
   return async (dispatch, getState) => {
     const uid = getState().auth.uid;
-    const idNote = getState().notes.active.id;
-    const note = getState().notes.active;
+    const id = note.id;
     delete note.id;
     if (!note.url) {
       delete note.url;
     }
+    await db.doc(`${uid}/journal/notes/${id}`).update(note);
 
-    await db.doc(`${uid}/journal/notes/${idNote}`).update(note);
-    //dispatch(loadNotesStart(uid));//CARGAR LA NOTA PEREZOSA
-    dispatch(updateNoteRefresh(idNote, note));
+    dispatch(updateNoteRefresh(id, note));
+
     Swal.fire("Saved", note.title, "success");
   };
 };
@@ -60,7 +59,7 @@ export const updateNote = () => {
 export const updateNoteRefresh = (id, noteActive) => {
   return {
     type: types.notesUpdate,
-    payload: { id, note: { id, ...noteActive } },
+    payload: { id, active: { id, ...noteActive }, note: { id, ...noteActive } },
   };
 };
 
@@ -78,14 +77,13 @@ export const fileUpload = (file) => {
     });
 
     const fileURL = await fileUp(file);
-    const idNote = getState().notes.active.id;
+
     const note = getState().notes.active;
 
     const noteComplete = { ...note, url: fileURL };
 
-    dispatch(activeNote(idNote, noteComplete));
+    dispatch(updateNote(noteComplete));
 
-    dispatch(updateNote());
     Swal.close();
   };
 };
